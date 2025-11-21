@@ -1,0 +1,39 @@
+# FastAPI and server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+python-dotenv==1.0.0
+
+# Database
+sqlalchemy[asyncio]==2.0.23
+aiosqlite==0.19.0
+
+# Graph Database - FalkorDB
+redis==3.5.3
+redisgraph==2.4.4  # Latest available version compatible with FalkorDB
+
+# RAG and LLM
+llama-index==0.9.48
+llama-index-embeddings-openai==0.1.7
+llama-index-llms-openai==0.1.14
+# Note: llama-index-vector-stores-falkordb may need to be implemented as custom integration
+# For now, we'll use a generic vector store or implement custom FalkorDB integration
+openai==1.6.1
+
+# PDF Processing
+pypdf2==3.0.1
+pdfplumber==0.10.3
+
+# Text Processing
+nltk==3.8.1
+spacy==3.7.2
+
+# Utilities
+pydantic==2.5.0
+pydantic-settings==2.1.0
+httpx==0.25.2
+
+# Authentication (optional)
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
