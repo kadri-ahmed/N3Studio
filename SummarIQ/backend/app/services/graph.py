@@ -1,4 +1,5 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
+import uuid
 from app.core.falkordb import FalkorDBClient
 from app.schemas.graph import GraphNode, GraphEdge, GraphQueryResponse, GraphVisualizationData
 
@@ -7,6 +8,67 @@ class GraphService:
     def __init__(self, falkordb: FalkorDBClient):
         self.falkordb = falkordb
         self.graph = falkordb.get_graph()
+    
+    def create_paper_node(
+        self,
+        paper_id: int,
+        title: str,
+        authors: Optional[str] = None,
+        abstract: Optional[str] = None,
+        filename: Optional[str] = None
+    ) -> str:
+        """Create a Paper node in the graph"""
+        node_id = f"paper_{paper_id}_{uuid.uuid4().hex[:8]}"
+        
+        # Use parameterized query for safety
+        query = """
+        CREATE (p:Paper {
+            id: $paper_id,
+            node_id: $node_id,
+            title: $title,
+            authors: $authors,
+            abstract: $abstract,
+            filename: $filename
+        })
+        RETURN p
+        """
+        
+        params = {
+            "paper_id": paper_id,
+            "node_id": node_id,
+            "title": title or "",
+            "authors": authors or "",
+            "abstract": abstract or "",
+            "filename": filename or ""
+        }
+        
+        try:
+            result = self.graph.query(query, params)
+            return node_id
+        except Exception as e:
+            print(f"Error creating paper node: {e}")
+            # If parameterized query fails, try direct string interpolation (less safe but works)
+            # Escape single quotes
+            def escape(s: str) -> str:
+                return s.replace("'", "\\'") if s else ""
+            
+            query_direct = f"""
+            CREATE (p:Paper {{
+                id: {paper_id},
+                node_id: '{node_id}',
+                title: '{escape(title or "")}',
+                authors: '{escape(authors or "")}',
+                abstract: '{escape(abstract or "")}',
+                filename: '{escape(filename or "")}'
+            }})
+            RETURN p
+            """
+            try:
+                result = self.graph.query(query_direct)
+                return node_id
+            except Exception as e2:
+                print(f"Error with direct query: {e2}")
+                raise
     
     async def get_nodes(self, label: Optional[str] = None, limit: int = 100) -> List[GraphNode]:
         """Get graph nodes"""

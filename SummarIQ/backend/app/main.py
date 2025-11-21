@@ -3,16 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from app.core.config import settings
+from app.core.database import engine, Base
+from app.models import paper  # Import models to register them
 from app.api.v1 import papers, graph, rag
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    # Initialize FalkorDB connection, load models, etc.
+    # Startup: Create database tables
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
-    # Shutdown
-    # Cleanup connections, etc.
+    # Shutdown: Cleanup connections, etc.
 
 
 app = FastAPI(
