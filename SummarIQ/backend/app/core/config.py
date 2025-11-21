@@ -25,10 +25,17 @@ class Settings(BaseSettings):
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"
     
-    # OpenAI / LLM Settings
+    # LLM Settings - GROQ (fast inference)
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.1-70b-versatile"  # or "mixtral-8x7b-32768", "gemma2-9b-it"
+    
+    # OpenAI Settings (optional, for embeddings or fallback)
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4-turbo-preview"
     EMBEDDING_MODEL: str = "text-embedding-3-small"
+    
+    # LLM Provider selection
+    LLM_PROVIDER: str = "groq"  # "groq" or "openai"
     
     # File Upload
     MAX_UPLOAD_SIZE: int = 50 * 1024 * 1024  # 50MB

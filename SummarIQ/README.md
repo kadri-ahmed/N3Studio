@@ -98,8 +98,18 @@ FALKORDB_HOST=localhost
 FALKORDB_PORT=6379
 DATABASE_URL=sqlite+aiosqlite:///./summariq.db
 SECRET_KEY=your-secret-key-here
-OPENAI_API_KEY=your-openai-api-key  # Or use local LLM
+
+# GROQ API (recommended - fast inference)
+GROQ_API_KEY=your-groq-api-key
+GROQ_MODEL=llama-3.1-70b-versatile
+LLM_PROVIDER=groq
+
+# OpenAI API (for embeddings, optional)
+OPENAI_API_KEY=your-openai-api-key
+EMBEDDING_MODEL=text-embedding-3-small
 ```
+
+**Get GROQ API Key**: Sign up at https://console.groq.com/
 
 6. Run the server:
 ```bash

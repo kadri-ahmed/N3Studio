@@ -2,15 +2,18 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.rag import SummarizeResponse, QueryResponse, RecommendResponse
+from app.services.llm_setup import get_llm, get_embedding_model
 
 
 class RAGService:
     def __init__(self, db: AsyncSession):
         self.db = db
-        # TODO: Initialize LlamaIndex components
-        # - Document loader
-        # - Vector store (FalkorDB)
-        # - LLM (OpenAI or local)
+        # Initialize LlamaIndex components
+        self.llm = get_llm()
+        self.embed_model = get_embedding_model()
+        # TODO: Initialize document loader and vector store
+        # - Document loader for PDFs
+        # - Vector store (FalkorDB integration or alternative)
         # - Query engine
     
     async def summarize_paper(
